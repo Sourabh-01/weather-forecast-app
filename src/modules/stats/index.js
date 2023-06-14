@@ -195,6 +195,8 @@ const Stats = () => {
     } else {
       setLoading(false);
     }
+    setLoading(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.showError]);
 
@@ -221,6 +223,8 @@ const Stats = () => {
         getLocation();
       }
     }
+    setLoading(false);
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unit]);
 
