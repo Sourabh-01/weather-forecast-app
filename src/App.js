@@ -26,7 +26,8 @@ const DetailsContainer = styled.div`
   }
   @media (min-width: 768px) and (max-width: 1024px) {
     top: 12%;
-    left: 12%;
+    left: 8%;
+    width: 85%;
   }
 `;
 
