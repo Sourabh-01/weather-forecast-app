@@ -10,19 +10,9 @@ import DashboardComponent from "../dashboard";
 import Charts from "../charts";
 import { ReactComponent as CloudLogo } from "../../assets/cloudError.svg";
 import { RotatingLines } from "react-loader-spinner";
-
-const Input = styled.input`
-  padding-left: 15px;
-  width: 200px;
-  height: 40px;
-  border: 1px solid #d6d5d4;
-  opacity: 0.8;
-  border-radius: 25px;
-  outline: none;
-  &:focus {
-    border: 1px solid #d6d5d4;
-  }
-`;
+import { Hint } from "react-autocomplete-hint";
+import countryList from "react-select-country-list";
+import "../../index.css";
 
 const InputContainer = styled.div`
   display: flex;
@@ -103,11 +93,11 @@ const Stats = () => {
     if (value !== "") {
       getWeatherData(value, unit ?? state.unit);
     }
-  }, 1000);
+  }, 1500);
 
   const debouncedLocationData = useDebouncedCallback((lat, lon) => {
     getLocationData(lat, lon);
-  }, 200);
+  }, 1000);
 
   const getWeatherData = async (value, unit) => {
     let input = utility.trimSpaces(value.split(","));
@@ -169,6 +159,7 @@ const Stats = () => {
   const getLocation = () => {
     if (!navigator.geolocation) {
       utility.failureToast(TOAST_MESSAGES.LOCATION_NOT_FETCHED);
+      setLoading(false);
     } else {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -233,13 +224,24 @@ const Stats = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unit]);
 
+  useEffect(() => {
+    dispatch({
+      type: "setSuggestions",
+      payload: countryList().getLabels(),
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <InputContainer>
-        <Input
-          onChange={(event) => debounced(event.target.value)}
-          placeholder="Enter City Name or Zip Code"
-        />
+        <Hint options={state.suggestions} allowTabFill>
+          <input
+            className="suggestedInput"
+            onChange={(event) => debounced(event.target.value)}
+            placeholder="Enter City Name or Zip Code"
+          />
+        </Hint>
         <SwitchContainer>
           <label>Celsius</label>
           <Switch

@@ -8,6 +8,7 @@ let initialState = {
   unit: "",
   input: "",
   coords: [],
+  suggestions: [],
 };
 
 const setCityName = (state, action) => {
@@ -34,6 +35,9 @@ const setInput = (state, action) => {
 const setCoords = (state, action) => {
   state.coords = action.payload;
 };
+const setSuggestions = (state, action) => {
+  state.suggestions = action.payload;
+}
 
 export const weatherReducer = createReducer(initialState, {
   setCityName,
@@ -43,4 +47,5 @@ export const weatherReducer = createReducer(initialState, {
   setUnit,
   setInput,
   setCoords,
+  setSuggestions
 });

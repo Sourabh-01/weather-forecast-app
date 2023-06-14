@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+.suggestedInput{
+  padding-left: 15px;
+  width: 200px;
+  height: 40px;
+  border: 1px solid #d6d5d4;
+  opacity: 0.8;
+  border-radius: 25px;
+  outline: none;
+  &:focus {
+    border: 1px solid #d6d5d4;
+  }
+}
