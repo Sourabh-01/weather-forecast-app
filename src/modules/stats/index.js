@@ -29,6 +29,7 @@ const LoaderContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 10%;
+  padding-bottom: 18%;
 `;
 
 const SwitchContainer = styled.div`
@@ -78,6 +79,10 @@ const MidDetails = styled.div`
     max-width: 80%;
     margin: 10px;
   }
+`;
+
+const StatsDiv = styled.div`
+  display: ${(props) => (props.loading ? "none" : "block")};
 `;
 
 const Stats = () => {
@@ -199,6 +204,7 @@ const Stats = () => {
   }, [state.showError]);
 
   useEffect(() => {
+    setLoading(true);
     if (unit) {
       dispatch({
         type: "setUnit",
@@ -224,7 +230,6 @@ const Stats = () => {
   }, [unit]);
 
   useEffect(() => {
-    setLoading(true);
     dispatch({
       type: "setSuggestions",
       payload: countryList().getLabels(),
@@ -246,51 +251,48 @@ const Stats = () => {
           <label>Celsius</label>
           <Switch
             onChange={() => {
-              setLoading(true);
               setUnit(!unit);
             }}
           />
           <label>Fahrenheit</label>
         </SwitchContainer>
       </InputContainer>
-      {(state && !state?.weatherData) || state?.weatherData?.length === 0 ? (
-        <ErrorContainer>
-          {loading ? (
-            <LoaderContainer>
-              <RotatingLines
-                strokeColor="#BFBFBF"
-                strokeWidth="2"
-                animationDuration="1"
-                width="100"
-                visible={true}
-              />
-            </LoaderContainer>
-          ) : (
-            <div>
-              <MidDetails>
-                <CloudLogo />
-                <div>Unable to fetch the details!</div>
-                <div>
-                  Please enter the location manually or allow access to
-                  location.
-                </div>
-                <div>
-                  Note: US Country code is set by default. Enter location like
-                  "London/London,GB" or "208021, GB". Country Code is mandatory
-                  for searching using zipcode.
-                </div>
-              </MidDetails>
-            </div>
-          )}
-        </ErrorContainer>
-      ) : (
-        <>
-          <ScrollDiv>
-            <DashboardComponent loading={loading} setLoading={setLoading} />
-          </ScrollDiv>
-          <Charts loading={loading} unit={unit} />
-        </>
+      {loading && (
+        <LoaderContainer>
+          <RotatingLines
+            strokeColor="#BFBFBF"
+            strokeWidth="2"
+            animationDuration="1"
+            width="100"
+            visible={true}
+          />
+        </LoaderContainer>
       )}
+      <StatsDiv loading={loading}>
+        {(state && !state?.weatherData) || state?.weatherData?.length === 0 ? (
+          <ErrorContainer>
+            <MidDetails>
+              <CloudLogo />
+              <div>Unable to fetch the details!</div>
+              <div>
+                Please enter the location manually or allow access to location.
+              </div>
+              <div>
+                Note: US Country code is set by default. Enter location like
+                "London/London,GB" or "208021, GB". Country Code is mandatory
+                for searching using zipcode.
+              </div>
+            </MidDetails>
+          </ErrorContainer>
+        ) : (
+          <>
+            <ScrollDiv>
+              <DashboardComponent loading={loading} setLoading={setLoading} />
+            </ScrollDiv>
+            <Charts loading={loading} unit={unit} />
+          </>
+        )}
+      </StatsDiv>
     </>
   );
 };
