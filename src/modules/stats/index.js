@@ -183,7 +183,6 @@ const Stats = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
     if (
       state.showError &&
       Object.values(state.cityName).length === 0 &&
@@ -195,13 +194,11 @@ const Stats = () => {
     } else {
       setLoading(false);
     }
-    setLoading(false);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.showError]);
 
   useEffect(() => {
-    setLoading(true);
     if (unit) {
       dispatch({
         type: "setUnit",
@@ -223,12 +220,11 @@ const Stats = () => {
         getLocation();
       }
     }
-    setLoading(false);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unit]);
 
   useEffect(() => {
+    setLoading(true);
     dispatch({
       type: "setSuggestions",
       payload: countryList().getLabels(),
@@ -257,21 +253,20 @@ const Stats = () => {
           <label>Fahrenheit</label>
         </SwitchContainer>
       </InputContainer>
-      {loading ? (
-        <LoaderContainer>
-          <RotatingLines
-            strokeColor="#BFBFBF"
-            strokeWidth="2"
-            animationDuration="1"
-            width="100"
-            visible={true}
-          />
-        </LoaderContainer>
-      ) : (
-        <>
-          {(state && !state?.weatherData) ||
-          state?.weatherData?.length === 0 ? (
-            <ErrorContainer>
+      {(state && !state?.weatherData) || state?.weatherData?.length === 0 ? (
+        <ErrorContainer>
+          {loading ? (
+            <LoaderContainer>
+              <RotatingLines
+                strokeColor="#BFBFBF"
+                strokeWidth="2"
+                animationDuration="1"
+                width="100"
+                visible={true}
+              />
+            </LoaderContainer>
+          ) : (
+            <div>
               <MidDetails>
                 <CloudLogo />
                 <div>Unable to fetch the details!</div>
@@ -285,15 +280,15 @@ const Stats = () => {
                   for searching using zipcode.
                 </div>
               </MidDetails>
-            </ErrorContainer>
-          ) : (
-            <>
-              <ScrollDiv>
-                <DashboardComponent loading={loading} setLoading={setLoading} />
-              </ScrollDiv>
-              <Charts loading={loading} unit={unit} />
-            </>
+            </div>
           )}
+        </ErrorContainer>
+      ) : (
+        <>
+          <ScrollDiv>
+            <DashboardComponent loading={loading} setLoading={setLoading} />
+          </ScrollDiv>
+          <Charts loading={loading} unit={unit} />
         </>
       )}
     </>
